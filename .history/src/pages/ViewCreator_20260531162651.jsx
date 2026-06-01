@@ -1,0 +1,27 @@
+import Card from '../components/Card';
+import { supabase } from '../client';
+
+const ViewCreator = ({ creator }) => {
+    const creator
+    const fetchCreator = async (id) => {
+        const { data, error } = await supabase
+            .from('creators')
+            .select()
+            .eq('id', id)
+            .single();
+        if (error) console.error(error);
+        else return data;
+    }
+    return (
+        <div className="creator-view">
+            <Card
+                name={creator.name}
+                url={creator.url}
+                description={creator.description}
+                imageURL={creator.imageURL}
+            />
+        </div>
+    );
+}
+
+export default ViewCreator;

@@ -1,0 +1,24 @@
+import { useState, useEffect } from 'react'
+import { useRoutes } from 'react-router-dom'
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png'
+import AddCreator from './pages/AddCreator'
+import ShowCreators from './pages/ShowCreators'
+import ViewCreator from './pages/ViewCreator'
+import EditCreator from './pages/EditCreator'
+import { supabase } from './client'
+import './App.css'
+import { card } from './components/Card'
+
+const [creators, setCreators] = useState([])
+function App() {
+  async function fetchCreators() {
+    const { data, error } = await supabase.from('creators').select()
+    if (error) console.error(error)
+    else setCreators(data)
+  }
+  fetchCreators()
+}
+
+export default App
