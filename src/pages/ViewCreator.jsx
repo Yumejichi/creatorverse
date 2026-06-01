@@ -1,9 +1,8 @@
-import Card from '../components/Card';
 import { supabase } from '../client';
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 
-const ViewCreator = () => {
+const ViewCreator = ({ onCreatorDeleted }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [creator, setCreator] = useState(null);
@@ -37,23 +36,41 @@ const ViewCreator = () => {
             return;
         }
 
+        onCreatorDeleted?.(creator.id);
         navigate('/creators');
     };
 
     return (
         <div className="creator-view">
             <Link to="/creators" className="back-link">← Back to Creators</Link>
-  
-            <Card
 
-                id={creator.id}
-                name={creator.name}
-                url={creator.url}
-                description={creator.description}
-                imageURL={creator.imageURL}
-            />
-            <Link to={`/creators/${id}/edit`} className="btn">Edit Creator</Link>
-            <button type="button" className="btn delete-btn" onClick={handleDelete}>Delete Creator</button>
+            <section className="creator-detail">
+                {creator.imageURL ? (
+                    <img
+                        src={creator.imageURL}
+                        alt={`${creator.name} preview`}
+                        className="creator-detail-image"
+                    />
+                ) : null}
+
+                <h2 className="creator-detail-name">{creator.name}</h2>
+
+                <p className="creator-detail-description">{creator.description}</p>
+
+                <a
+                    href={creator.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="creator-detail-link"
+                >
+                    Visit Channel
+                </a>
+            </section>
+
+            <div className="creator-view-actions">
+                <Link to={`/creators/${id}/edit`} className="btn">Edit Creator</Link>
+                <button type="button" className="btn delete-btn" onClick={handleDelete}>Delete Creator</button>
+            </div>
 
         </div>
     );

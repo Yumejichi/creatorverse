@@ -1,7 +1,7 @@
 import { supabase } from "../client";
 import { Link, useNavigate } from 'react-router-dom'
 
-const AddCreator = () => { 
+const AddCreator = ({ onCreatorAdded }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -13,10 +13,12 @@ const AddCreator = () => {
 
         const { data, error } = await supabase
             .from('creators')
-            .insert({ name, url, description, imageURL });
+            .insert({ name, url, description, imageURL: imageURL || null })
+            .select()
+            .single();
         if (error) console.error(error);
         else {
-          console.log(data);
+          onCreatorAdded?.(data);
           navigate('/creators');
         }
     };
@@ -27,7 +29,6 @@ const AddCreator = () => {
           <Link to="/creators" className="back-link">← Back to Creators</Link>
           
           <h2>Add a Content Creator</h2>
-          <p className="form-subtitle">Share someone worth following in the Creatorverse.</p>
           <form onSubmit={handleSubmit} className="creator-form">
             <label>
               Name
